@@ -9,13 +9,16 @@ from Bio.SubsMat.MatrixInfo import blosum62 as bs
 import sys
 import os
 
+#BLAST XML Reader
+from Bio.Blast import NCBIXML
+
 #BLAST Command Line Tools (Python Wrapper)
 from Bio.Blast.Applications import NcbiblastpCommandline
 
 #Ensures environment variables are set
 assert os.environ.get("BLASTDB")!=None, "Directory of Blast database must be set"
 
-#Set path to BLAST home
+#Set path to BLAST home (Default install location)
 if not os.environ["PATH"]:
     os.environ["PATH"] = "$HOME/ncbi-blast-2.2.29+/bin"
 
@@ -59,3 +62,12 @@ def sys_gather_homologs(fasta):
     query_coverage = 80 #Minimum required overlap
     formatted = generic.format(db,query,evalue,outfmt,out,query_coverage)
     os.system(formatted)
+
+
+def parse_xml(alignment_file): #This is alignment.xml
+    record_handle = open(alignment_file)
+    records = NCBIXML.parse(record_handle)
+    return records
+
+def generate_msa(records_lst): #Takes output from parse_xml
+    pass
