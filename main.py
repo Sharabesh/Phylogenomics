@@ -90,7 +90,6 @@ def parse_xml(): #This is alignment.xml
             filtered_name = alignment.title
             filtered_seqrec = SeqRecord(filtered_seq, id=filtered_id, name=filtered_name)
             recs.append(filtered_seqrec)
-        print(alignment)
     _ = SeqIO.write(recs, recs_file, "fasta")
     print("Done")
 
@@ -99,3 +98,21 @@ def generate_msa():
     stdout, stderr = mafft_cline()
     with open(recs_file, "w") as handle:
         handle.write(stdout)
+
+"""Note specific columns can be removed using the argument 
+    -- select {{n,l,m-k}}
+"""
+def mask_msa():
+    terminal_source = "trimai -in {0} -out {1}"
+    os.system(terminal_source.format(recs_file,recs_file))
+
+
+
+
+
+
+
+
+
+
+
