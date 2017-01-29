@@ -1,0 +1,5 @@
+#biopython 
+#Mafft Command line  
+#Blast Command line 
+#trimal command line 
+#RaxML Command Line 
