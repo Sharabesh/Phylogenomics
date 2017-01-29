@@ -43,17 +43,17 @@ E_VAL_THRESH = .05
 ALIGN_PERCENT_THRESH = 80
 DATABASE = "nr.61"
 CONSENSUS_THRESH = .5
-INPUT_SEQUENCE = "fasta.txt"
-save_file_name = "alignment.xml"
-recs_file = "records.fasta"
+INPUT_SEQUENCE = "operating_reqs/fasta.txt"
+save_file_name = "operating_reqs/alignment.xml"
+recs_file = "operating_reqs/records.fasta"
 
 
 def length(fasta):
-    input = SeqIO.read("fasta.txt",format="fasta")
+    input = SeqIO.read(fasta,format="fasta")
     return len(input)
 
 
-input_len = length("fasta.txt")
+input_len = length(INPUT_SEQUENCE)
 
 #
 # """Uses BioPython rather than System os"""
@@ -110,9 +110,4 @@ def mask_msa():
 
 """Uses RaxML to generate tree which is read out by Bio's Phylo module"""
 def generate_tree():
-
-
-
-
-
-
+    pass
