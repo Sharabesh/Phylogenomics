@@ -103,7 +103,7 @@ def generate_msa():
     -- select {{n,l,m-k}}
 """
 def mask_msa():
-    terminal_source = "trimai -in {0} -out {1}"
+    terminal_source = "trimai -automated1 -in {0} -out {1}"
     os.system(terminal_source.format(recs_file,recs_file))
 
 
