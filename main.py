@@ -71,7 +71,7 @@ def sys_gather_homologs(fasta):
     query = fasta
     evalue = E_VAL_THRESH #Change if wanted
     outfmt = 5 # Indicates BLAST XML to write to file
-    out = "alignment.xml" #Data written to alignment.xml
+    out = save_file_name #Data written to alignment.xml
     query_coverage = ALIGN_PERCENT_THRESH #Minimum required overlap
     formatted = generic.format(db,query,evalue,outfmt,out,query_coverage)
     os.system(formatted)
