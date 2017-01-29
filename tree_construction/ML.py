@@ -1,8 +1,4 @@
 #!/usr/bin/python
-
-
-
-
 import os
 from Bio import Phylo
 
