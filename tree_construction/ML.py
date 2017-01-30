@@ -9,13 +9,11 @@ from Bio import Phylo
 # s: input file name, m: model name, p: parsimony seed, n:output name
 # w: output directiory 
 
-out_dir = os.getcwd() + os.sep + 'ML_tree'
-os.mkdir(out_dir)
-os.system('.//standard-RAxML-master//raxmlHPC -s masked.fasta -m PROTCATDAYHOFF \
-            -p 1000 -n ML_out -# 10 -w ' + out_dir)
+os.system('raxmlHPC -s masked.fasta -m PROTCATDAYHOFF \
+            -p 1000 -n ML_out -# 10 -w ' + 'RAxML_bestTree.ML_out')
 
 
-ML_tree = Phylo.read(out_dir + '/RAxML_bestTree.ML_out', 'newick')
+ML_tree = Phylo.read('RAxML_bestTree.ML_out', 'newick')
 
 
 

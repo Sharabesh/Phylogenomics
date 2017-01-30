@@ -8,6 +8,7 @@ from Bio.Blast import NCBIXML
 from Bio.Blast.NCBIWWW import qblast
 from Bio.Align.Applications import MafftCommandline
 from Bio.Align import MultipleSeqAlignment
+from Bio import Phylo 
 import os
 
 
@@ -46,6 +47,7 @@ CONSENSUS_THRESH = .5
 INPUT_SEQUENCE = "operating_reqs/fasta.txt"
 save_file_name = "operating_reqs/alignment.xml"
 recs_file = "operating_reqs/records.fasta"
+tree_file = 'operating_reqs/tree_files/RAxML_bestTree.ML_out'
 
 
 def length(fasta):
@@ -110,4 +112,33 @@ def mask_msa():
 
 """Uses RaxML to generate tree which is read out by Bio's Phylo module"""
 def generate_tree():
-    pass
+    command = 'raxmlHPC -s {0} -m {1} \
+            -p {2} -n ML_out -# {3} -w {4}'
+    
+    directory = os.getcwd()
+    sequence_file_name = directory + '/' + recs_file
+    substitution_model = "PROTCATDAYHOFF" 
+    parsinomy_random_seed = "1000"
+    num_runs = "10"
+    write_file = directory + '/' + 'operating_reqs/tree_files' 
+    os.system(command.format(sequence_file_name,
+        substitution_model,parsinomy_random_seed,
+        num_runs, write_file))
+    tree = Phylo.read(tree_file, 'newick')
+    Phylo.draw_ascii(tree)
+    return tree 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
