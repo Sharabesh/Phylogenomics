@@ -1,0 +1,111 @@
+
+
+IMPORTANT WARNING: Sequences XP_019712556.1 and XP_019712555.1 are exactly identical
+
+
+IMPORTANT WARNING: Sequences XP_019761130.1 and XP_019761129.1 are exactly identical
+
+IMPORTANT WARNING
+Found 2 sequences that are exactly identical to other sequences in the alignment.
+Normally they should be excluded from the analysis.
+
+Just in case you might need it, an alignment file with 
+sequence duplicates removed is printed to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/records.fasta.reduced
+
+
+This is RAxML version 8.2.9 released by Alexandros Stamatakis on July 20 2016.
+
+With greatly appreciated code contributions by:
+Andre Aberer      (HITS)
+Simon Berger      (HITS)
+Alexey Kozlov     (HITS)
+Kassian Kobert    (HITS)
+David Dao         (KIT and HITS)
+Sarah Lutteropp   (KIT and HITS)
+Nick Pattengale   (Sandia)
+Wayne Pfeiffer    (SDSC)
+Akifumi S. Tanabe (NRIFS)
+Charlie Taylor    (UF)
+
+
+Alignment has 482 distinct alignment patterns
+
+Proportion of gaps and completely undetermined characters in this alignment: 18.45%
+
+RAxML rapid hill-climbing mode
+
+Using 1 distinct models/data partitions with joint branch length optimization
+
+
+Executing 10 inferences on the original alignment using 10 distinct randomized MP trees
+
+All free model parameters will be estimated by RAxML
+ML estimate of 25 per site rate categories
+
+Likelihood of final tree will be evaluated and optimized under GAMMA
+
+GAMMA Model parameters will be estimated up to an accuracy of 0.1000000000 Log Likelihood units
+
+Partition: 0
+Alignment Patterns: 482
+Name: No Name Provided
+DataType: AA
+Substitution Matrix: DAYHOFF
+Using fixed base frequencies
+
+
+
+
+RAxML was called as follows:
+
+raxmlHPC -s /Users/sharabesh97/Desktop/bioe144/operating_reqs/records.fasta -m PROTCATDAYHOFF -p 1000 -n ML_out -# 10 -w /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files 
+
+
+Partition: 0 with name: No Name Provided
+Base frequencies: 0.087 0.041 0.040 0.047 0.033 0.038 0.050 0.089 0.034 0.037 0.085 0.080 0.015 0.040 0.051 0.070 0.059 0.010 0.030 0.065 
+
+Inference[0]: Time 142.793488 CAT-based likelihood -17820.340038, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[1]: Time 135.664337 CAT-based likelihood -17822.216639, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[2]: Time 136.951104 CAT-based likelihood -17820.855152, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[3]: Time 137.539023 CAT-based likelihood -17822.500173, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[4]: Time 133.539100 CAT-based likelihood -17820.928863, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[5]: Time 141.750688 CAT-based likelihood -17822.216639, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[6]: Time 165.592094 CAT-based likelihood -17822.500173, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[7]: Time 140.184940 CAT-based likelihood -17821.479752, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[8]: Time 7353.106458 CAT-based likelihood -17821.775113, best rearrangement setting 5
+alpha[0]: 1.000000 
+Inference[9]: Time 21721.025789 CAT-based likelihood -17820.928863, best rearrangement setting 5
+alpha[0]: 1.000000 
+
+
+Conducting final model optimizations on all 10 trees under GAMMA-based models ....
+
+Inference[0] final GAMMA-based Likelihood: -18295.526360 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.0
+Inference[1] final GAMMA-based Likelihood: -18292.400418 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.1
+Inference[2] final GAMMA-based Likelihood: -18292.400419 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.2
+Inference[3] final GAMMA-based Likelihood: -18292.400419 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.3
+Inference[4] final GAMMA-based Likelihood: -18295.526268 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.4
+Inference[5] final GAMMA-based Likelihood: -18292.400419 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.5
+Inference[6] final GAMMA-based Likelihood: -18292.400419 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.6
+Inference[7] final GAMMA-based Likelihood: -18295.526268 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.7
+Inference[8] final GAMMA-based Likelihood: -18295.533311 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.8
+Inference[9] final GAMMA-based Likelihood: -18295.526268 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out.RUN.9
+
+
+Starting final GAMMA-based thorough Optimization on tree 1 likelihood -18292.400418 .... 
+
+Final GAMMA-based Score of best tree -18292.022717
+
+Program execution info written to /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_info.ML_out
+Best-scoring ML tree written to: /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_bestTree.ML_out
+
+Overall execution time: 35605.217687 secs or 9.890338 hours or 0.412097 days
+
