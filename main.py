@@ -133,8 +133,16 @@ def generate_tree():
 
 
 def distances(input):
-    tree = Phylo.read(tree_file)
-    distance = tree.distance
+    tree = dendropy.Tree.get(
+        path=tree_file,
+        schema="newick"
+    )
+    pdm = tree.phylogenetic_distance_matrix()
+    for idx1, taxon1 in enumerate(tree.taxon_namespace):
+        for taxon2 in tree.taxon_namespace:
+            mrca = pdm.mrca(taxon1, taxon2)
+            weighted_patristic_distance = pdm.patristic_distance(taxon1, taxon2)
+            unweighted_patristic_distance = pdm.path_edge_count(taxon1, taxon2)
 
 
 
