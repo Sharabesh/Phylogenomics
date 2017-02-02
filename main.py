@@ -10,6 +10,7 @@ from Bio.Align.Applications import MafftCommandline
 from Bio.Align import MultipleSeqAlignment
 from Bio import Phylo 
 import os
+import dendropy
 
 
 #Ensures environment variables are set
@@ -103,6 +104,7 @@ def generate_msa():
 
 """Note specific columns can be removed using the argument 
     -- select {{n,l,m-k}}
+    Masks and edits the alignment intelligently. 
 """
 def mask_msa():
     terminal_source = "trimal -automated1 -in {0} -out {1}"
@@ -112,14 +114,15 @@ def mask_msa():
 
 """Uses RaxML to generate tree which is read out by Bio's Phylo module"""
 def generate_tree():
+    directory = os.getcwd()
+    #Delete all existing tree files 
+    os.system("rm {0}/*".format(directory + '/operating_reqs/tree_files'))
     command = 'raxmlHPC -s {0} -m {1} \
             -p {2} -n ML_out -# {3} -w {4}'
-    
-    directory = os.getcwd()
     sequence_file_name = directory + '/' + recs_file
     substitution_model = "PROTCATDAYHOFF" 
     parsinomy_random_seed = "1000"
-    num_runs = "10"
+    num_runs = "1"
     write_file = directory + '/' + 'operating_reqs/tree_files' 
     os.system(command.format(sequence_file_name,
         substitution_model,parsinomy_random_seed,
@@ -129,12 +132,21 @@ def generate_tree():
     return tree 
 
 
+def distances(input):
+    tree = Phylo.read(tree_file)
+    distance = tree.distance
 
 
 
 
 
-
+"""Runs the entire phylogenetic process""" 
+def run():
+    sys_gather_homologs(INPUT_SEQUENCE)
+    parse_xml()
+    generate_msa()
+    mask_msa()
+    generate_tree()
 
 
 
