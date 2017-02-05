@@ -8,11 +8,30 @@ from Bio import AlignIO
 import subprocess
 from subprocess import Popen, PIPE
 
-recs_file = os.getcwd() + '/masked.fasta'
+
+recs_file = os.getcwd() + '/masked.fasta' # this needs to be removed; 
 
 
 """Uses Bio's AlignIO module to convert fasta into relaxed phylip"""
 def fasta_to_phylip():
+    
+# Phylip seems to be strict about the inputfile format 
+# to keep the full accession, relaxed phylip is needed 
+# but phylip doesn't accept the input file if the accession has "." 
+# so I tried to overwrite the input file ater removing ".#" 
+    
+    with open(recs_file, "r+") as f:
+        input_file = f.readlines()
+        for a in range(0,len(input_file)):
+            if "." in input_file[a]:
+                input_file[a] = input_file[a].split(".", 1)[0]
+        f.close()
+    with open(recs_file, "w+") as f:
+        for item in input_file:
+            f.write("%s\n" % item)
+        f.close()
+                
+            
     in_file = recs_file
     out_file = "recs_phylip"
     in_format = "fasta"
@@ -32,7 +51,7 @@ def generate_MLtree():
 
 
 # The initial directory and executable: ./PhyML-3.1/PhyML3.1_linux62 
-# the directory might need to change 
+# the directory might need to be changed 
     command = 'PhyML-3.1/PhyML -i {0} -d {1} -m {2}'
     sequence_file_name = recs_phylip # input is in phylip format, not fasta
     data_type = "aa" 
@@ -56,6 +75,16 @@ def generate_NJtree():
 # First, create the distance materix 
 # the initial directory and executable: ./phylip-3.696/exe/protdist
     directory = os.getcwd()
+
+# error pops up if there is any existing file that has names that phylip wants to use
+# mainly, infile/outifle/outtree but I removed all the exisitng files 
+    
+    possible_files = ['infile', 'MSA_phylip', 'outfile', 'NJ_tree', 'DistanceMatrix']
+    for A in possible_files:
+        if os.path.isfile(directory + '/' + A) == 1:
+            os.remove(directory + '/' + A)
+
+# it seems Phylip only accets the file name 'infile'         
     os.rename(directory + '/recs_phylip', 'infile')
     sequence_file_name = directory + '/infile'
 
@@ -88,9 +117,9 @@ def generate_NJtree():
 
 
 
-# This is to test 
+# This part is to test; needs to be removed
 
 fasta_to_phylip()
-generate_NJtree()
+generate_MLtree()
 
 
