@@ -11,6 +11,8 @@ from Bio.Align import MultipleSeqAlignment
 from Bio import Phylo 
 import os
 import dendropy
+import re
+
 
 
 #Ensures environment variables are set
@@ -41,8 +43,11 @@ class Sequence:
             output += item.aa
         return output
 
-E_VAL_THRESH = .05
-ALIGN_PERCENT_THRESH = 80
+
+
+#OPERATING PROCESSES
+E_VAL_THRESH = .005
+ALIGN_PERCENT_THRESH = 70
 DATABASE = "nr.61"
 CONSENSUS_THRESH = .5
 INPUT_SEQUENCE = "operating_reqs/fasta.txt"
@@ -80,6 +85,10 @@ def sys_gather_homologs(fasta):
     os.system(formatted)
 
 
+#raxml --> phyML
+#neighbor joining --> protdist
+
+
 
 def parse_xml(): #This is alignment.xml
     with open(save_file_name) as result_handle:
@@ -110,10 +119,57 @@ def mask_msa():
     terminal_source = "trimal -automated1 -in {0} -out {1}"
     os.system(terminal_source.format(recs_file,recs_file))
 
+def msaprocess(): #Takes an input from the mask_msa function
+    processed = SeqIO.parse(recs_file,"fasta")
+    output = [] #Returns a list of homologs all with TMH annotations
+    for record in processed:
+        identifier = record.name
+        membrane = topology(identifier)
+        gapped_sequence = str(record.seq)
+        representation = generate_rep(gapped_sequence,membrane,identifier)
+        output.append(representation)
+    return output
+
+def generate_rep(sequence,topology,identifier):
+    overall = Sequence(identifier)
+    gaps = []
+    for i in range(len(sequence)):
+        if (sequence[i] == "-"):
+            gaps.append(i) #Maintain positions of gaps
+
+    #Remove all gaps
+    sequence = re.sub(r"-","",sequence)
+
+    #Initialize each protein without annotations
+    for item in sequence:
+        x = Residue("",item)
+        overall.sequence.append(x)
+
+    #Annotate each protein
+    for item in topology:
+        start = item[1]
+        end = item[2]
+        annotation = item[0]
+        for i in range(start-1,end):
+            overall.sequence[i].annotation = annotation
+
+    #Reinsert gap characters
+    gap = Residue("","-")
+    for index in gaps:
+        overall.sequence.insert(index,gap)
+
+    return overall
+
+
+
+
+def topology(identifier): #Gather transmembrane helix things
+    pass
+
 
 
 """Uses RaxML to generate tree which is read out by Bio's Phylo module"""
-def generate_tree():
+def generate_tree_RAxML():
     directory = os.getcwd()
     #Delete all existing tree files 
     os.system("rm {0}/*".format(directory + '/operating_reqs/tree_files'))
@@ -131,6 +187,11 @@ def generate_tree():
     Phylo.draw_ascii(tree)
     return tree 
 
+def generate_tree_phyml():
+    pass #This is loaded in a separate file in case
+
+
+
 
 def distances(input):
     tree = dendropy.Tree.get(
@@ -145,16 +206,18 @@ def distances(input):
             unweighted_patristic_distance = pdm.path_edge_count(taxon1, taxon2)
 
 
+#Sifter bayesian phylogenetic approach
+#gene ontology annotations
 
 
 
-"""Runs the entire phylogenetic process""" 
+"""Runs the entire phylogenetic process with RAxML"""
 def run():
     sys_gather_homologs(INPUT_SEQUENCE)
     parse_xml()
     generate_msa()
     mask_msa()
-    generate_tree()
+    generate_tree_RAxML()
 
 
 
