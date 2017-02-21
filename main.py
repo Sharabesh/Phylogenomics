@@ -54,6 +54,7 @@ INPUT_SEQUENCE = "operating_reqs/fasta.txt"
 save_file_name = "operating_reqs/alignment.xml"
 recs_file = "operating_reqs/records.fasta"
 tree_file = 'operating_reqs/tree_files/RAxML_bestTree.ML_out'
+tmhmm_file='operating_reqs/tmhmm.html'
 
 
 def length(fasta):
@@ -111,24 +112,48 @@ def generate_msa():
     with open(recs_file, "w") as handle:
         handle.write(stdout)
 
-"""Note specific columns can be removed using the argument 
-    -- select {{n,l,m-k}}
-    Masks and edits the alignment intelligently. 
-"""
-def mask_msa():
-    terminal_source = "trimal -automated1 -in {0} -out {1}"
-    os.system(terminal_source.format(recs_file,recs_file))
 
-def msaprocess(): #Takes an input from the mask_msa function
+def msaprocess(): #Takes an input from the generate_msa function
     processed = SeqIO.parse(recs_file,"fasta")
     output = [] #Returns a list of homologs all with TMH annotations
+    helices = parse_TMHMM()
     for record in processed:
         identifier = record.name
-        membrane = topology(identifier)
+        annotation = helices[identifier][1]
+        membrane = topology(annotation)
         gapped_sequence = str(record.seq)
         representation = generate_rep(gapped_sequence,membrane,identifier)
         output.append(representation)
     return output
+
+def parse_TMHMM():
+    TMHMM_results = {}
+    with open(tmhmm_file) as TMHMM_results_file:
+        all_preds = TMHMM_results_file.read().split('\n')
+    for pred in all_preds:
+        pred = pred.split('\t')
+        pred_id = pred[0]
+        pred_len = eval(pred[1][pred[1].index("=")+1:])
+        pred_hel_num = eval(pred[4][pred[4].index("=")+1:])
+        pred_topo = pred[5][pred[5].index("=")+1:]
+        TMHMM_results[pred_id] = (pred_hel_num, pred_topo, pred_len)
+    return TMHMM_results
+    #Now TMHMM Results are set as id:(pred_hel_number,pred_topo,pred_len)
+
+
+def topology(annotation):#Parses the TMHMM String
+    output = [] # A list of tuples with start,end,annotation
+    processed = annotation.replace("-",":").replace("o","] [").replace("i","] [").split(" ")[1:-1]
+    for item in processed:
+        item = item.strip("[").strip("]").split(":")
+        start = int(item[0])
+        end = int(item[1])
+        check = item[0] + '-' + item[1]
+        notation = annotation[annotation.index(check)-1]
+        output.append((start,end,notation))
+        print((start,end,notation))
+    return output
+
 
 def generate_rep(sequence,topology,identifier):
     overall = Sequence(identifier)
@@ -147,9 +172,9 @@ def generate_rep(sequence,topology,identifier):
 
     #Annotate each protein
     for item in topology:
-        start = item[1]
-        end = item[2]
-        annotation = item[0]
+        start = item[0]
+        end = item[1]
+        annotation = item[2]
         for i in range(start-1,end):
             overall.sequence[i].annotation = annotation
 
@@ -161,10 +186,13 @@ def generate_rep(sequence,topology,identifier):
     return overall
 
 
-
-
-def topology(identifier): #Gather transmembrane helix things
-    pass
+"""Note specific columns can be removed using the argument
+    -- select {{n,l,m-k}}
+    Masks and edits the alignment intelligently.
+"""
+def mask_msa(): #DON"T MASK UNTIL AFTER MSA_PROCESS()!
+    terminal_source = "trimal -automated1 -in {0} -out {1}"
+    os.system(terminal_source.format(recs_file,recs_file))
 
 
 
