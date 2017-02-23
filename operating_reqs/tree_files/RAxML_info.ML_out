@@ -100,7 +100,7 @@ raxmlHPC -s /Users/sharabesh97/Desktop/bioe144/operating_reqs/records.fasta -m P
 Partition: 0 with name: No Name Provided
 Base frequencies: 0.087 0.041 0.040 0.047 0.033 0.038 0.050 0.089 0.034 0.037 0.085 0.080 0.015 0.040 0.051 0.070 0.059 0.010 0.030 0.065 
 
-Inference[0]: Time 190.088471 CAT-based likelihood -16593.072710, best rearrangement setting 5
+Inference[0]: Time 186.256749 CAT-based likelihood -16593.072710, best rearrangement setting 5
 alpha[0]: 1.000000 
 
 
@@ -110,4 +110,11 @@ Inference[0] final GAMMA-based Likelihood: -16885.425963 tree written to file /U
 
 
 Starting final GAMMA-based thorough Optimization on tree 0 likelihood -16885.425963 .... 
+
+Final GAMMA-based Score of best tree -16883.315660
+
+Program execution info written to /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_info.ML_out
+Best-scoring ML tree written to: /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_bestTree.ML_out
+
+Overall execution time: 668.915759 secs or 0.185810 hours or 0.007742 days
 

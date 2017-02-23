@@ -115,7 +115,7 @@ def generate_msa():
 
 def msaprocess(): #Takes an input from the generate_msa function
     processed = SeqIO.parse(recs_file,"fasta")
-    output = [] #Returns a list of homologs all with TMH annotations
+    output = {} #Returns a list of homologs all with TMH annotations
     helices = parse_TMHMM()
     for record in processed:
         identifier = record.name
@@ -123,7 +123,7 @@ def msaprocess(): #Takes an input from the generate_msa function
         membrane = topology(annotation)
         gapped_sequence = str(record.seq)
         representation = generate_rep(gapped_sequence,membrane,identifier)
-        output.append(representation)
+        output[identifier] = representation
     return output
 
 def parse_TMHMM():
@@ -178,7 +178,7 @@ def generate_rep(sequence,topology,identifier):
         for i in range(start-1,end):
             overall.sequence[i].annotation = annotation
 
-    #Reinsert gap characters
+    #Reinsert gap characters TODO:this may be an iffy process
     gap = Residue("","-")
     for index in gaps:
         overall.sequence.insert(index,gap)
@@ -219,6 +219,32 @@ def generate_tree_phyml():
     pass #This is loaded in a separate file in case
 
 
+"""
+A high positive score indicates the majority of proteins have
+a given annotation. Output: {(Score, i),(Score,o),(Score,-)}
+Close proteins with the annotation will incremement the corresponding score
+
+"""
+def scoring_func(tree,sequences,target):
+    proteins = list(sequences.keys())
+    for sequence in range(len(sequences[0])):
+        for column in range(len(sequences)):
+            totals = {'i':0,'o':0,'-':0}
+            target = sequences[proteins[sequence]][column]
+            totals[target.annotation] += score(tree,sequences[proteins[column]])
+
+
+
+
+
+
+
+
+def score(tree,target,destination):
+    try:
+        return 1/tree.distance(target,destination)
+    except ZeroDivisionError: #Distance to yourself must be 1
+        return 0
 
 
 def distances(input):
