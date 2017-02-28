@@ -228,10 +228,18 @@ Close proteins with the annotation will incremement the corresponding score
 def scoring_func(tree,sequences,target):
     proteins = list(sequences.keys())
     for sequence in range(len(sequences[0])):
-        for column in range(len(sequences)):
-            totals = {'i':0,'o':0,'-':0}
-            target = sequences[proteins[sequence]][column]
-            totals[target.annotation] += score(tree,sequences[proteins[column]])
+        totals = {'i':0,'o':0,'-':0}
+        for protein in range(len(sequences)):
+            point = sequences[proteins[sequence]][protein]
+            totals[point.annotation] += score(tree,sequences[proteins[protein]])
+        sum_of_vals = totals['i'] + totals['o'] + totals['-']
+        if totals['i']/sum_of_vals > CONSENSUS_THRESH:
+            target[sequence].annotation = 'i'
+        if totals['o']/sum_of_vals > CONSENSUS_THRESH:
+            target[sequence].annotation = 'o'
+        if totals['-']/sum_of_vals > CONSENSUS_THRESH:
+            target[sequence].annotation = '-'
+        
 
 
 
