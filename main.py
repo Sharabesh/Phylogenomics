@@ -11,6 +11,7 @@ from Bio.Align import MultipleSeqAlignment
 from Bio import Phylo 
 import os
 import dendropy
+from Bio.SubsMat.MatrixInfo import blosum62 as bs
 import re
 
 
@@ -122,6 +123,7 @@ def msaprocess(): #Takes an input from the generate_msa function
         annotation = helices[identifier][1]
         membrane = topology(annotation)
         gapped_sequence = str(record.seq)
+        print("Sequence Length is: " + str(len(gapped_sequence)))
         representation = generate_rep(gapped_sequence,membrane,identifier)
         output[identifier] = representation
     return output
@@ -157,33 +159,100 @@ def topology(annotation):#Parses the TMHMM String
 
 def generate_rep(sequence,topology,identifier):
     overall = Sequence(identifier)
-    gaps = []
-    for i in range(len(sequence)):
-        if (sequence[i] == "-"):
-            gaps.append(i) #Maintain positions of gaps
 
-    #Remove all gaps
-    sequence = re.sub(r"-","",sequence)
-
-    #Initialize each protein without annotations
     for item in sequence:
         x = Residue("",item)
         overall.sequence.append(x)
 
-    #Annotate each protein
+
+    i = 0
+    count = 0
     for item in topology:
         start = item[0]
         end = item[1]
         annotation = item[2]
-        for i in range(start-1,end):
-            overall.sequence[i].annotation = annotation
 
-    #Reinsert gap characters TODO:this may be an iffy process
-    gap = Residue("","-")
-    for index in gaps:
-        overall.sequence.insert(index,gap)
-
+        #Get to the starting position excluding gap counts
+        while count < start:
+            if sequence[i] == "-":
+                i+=1
+            else:
+                i+=1
+                count += 1
+        while count < end + 1:
+            if sequence[i] == "-":
+                i+=1
+            else:
+                overall.sequence[i-1].annotation = annotation
+                i+=1
+                count +=1
     return overall
+
+
+
+def scoreAcids(residue1, residue2):
+    try:
+        return bs[(residue1,residue2)]
+    except:
+        try:
+            return bs[(residue2,residue1)]
+        except:
+            return 0 #Score of a gap character is set to 0
+
+
+
+def generate_consensus_withoutTree(query):
+    #The matrix of annotated proteins
+    topology_dict = msaprocess()
+
+
+    target = topology_dict[query]
+    del topology_dict[query]
+
+    topology_matrix = list(topology_dict.values())
+
+
+    #Identifies the number of alterations were made
+    changes = 0
+
+    #identifies which chain you want to transfer the consensus annotation to
+    target = topology_dict[query]
+
+    for column in range(len(topology_matrix[0])):
+
+        annotations = {}
+        acids = []
+        target_annotation = target[column].annotation
+
+        for protein in range(len(topology_matrix)):
+            target2 = topology_matrix[protein][column]
+            if annotations.get(target2.annotation):
+                annotations[target2.annotation] += 1
+            else:
+                annotations[target2.annotation] = 1
+            acids.append(target2.aa)
+        if high_agreement(annotations) and high_blosum_scores(acids,target[column].aa):
+            target[column].annotation = most_common(annotations)
+            changes +=1
+    return target
+def high_blosum_scores(acid_lst,targetAA):
+    blosum_score = 0
+    for acid in acid_lst:
+        blosum_score += scoreAcids(targetAA,acid)
+    return blosum_score > 0
+
+def most_common(annotations):
+    return max(annotations,key=lambda x:annotations[x])
+
+
+
+def high_agreement(annotations_dict):
+    mostcommon = max(annotations_dict, key = lambda x: annotations_dict[x])
+    if annotations_dict[mostcommon] / sum(annotations_dict.values()) > CONSENSUS_THRESH:
+        return True
+    else:
+        return False
+
 
 
 """Note specific columns can be removed using the argument
@@ -223,10 +292,12 @@ def generate_tree_phyml():
 A high positive score indicates the majority of proteins have
 a given annotation. Output: {(Score, i),(Score,o),(Score,-)}
 Close proteins with the annotation will incremement the corresponding score
-
 """
+
+
 def scoring_func(tree,sequences,target):
     proteins = list(sequences.keys())
+    changes = 0
     for sequence in range(len(sequences[0])):
         totals = {'i':0,'o':0,'-':0}
         for protein in range(len(sequences)):
@@ -235,16 +306,14 @@ def scoring_func(tree,sequences,target):
         sum_of_vals = totals['i'] + totals['o'] + totals['-']
         if totals['i']/sum_of_vals > CONSENSUS_THRESH:
             target[sequence].annotation = 'i'
+            changes += 1
         if totals['o']/sum_of_vals > CONSENSUS_THRESH:
             target[sequence].annotation = 'o'
+            changes += 1
         if totals['-']/sum_of_vals > CONSENSUS_THRESH:
             target[sequence].annotation = '-'
-        
-
-
-
-
-
+            changes += 1
+    print(str(changes) + " Changes Made")
 
 
 
@@ -274,7 +343,7 @@ def distances(input):
 
 
 """Runs the entire phylogenetic process with RAxML"""
-def run():
+def run_():
     sys_gather_homologs(INPUT_SEQUENCE)
     parse_xml()
     generate_msa()
@@ -286,4 +355,68 @@ def run():
 
 
 
+
+"""
+Modify the clustering protocol
+ - What happens when you have sequences with high divergence
+    Make sure they still have global alignmnet over the target domain
+        ION Trans in KCNA1_HUMAN have all the TMH's.
+ - Filter sequences for redundancies
+ - Remove the number of sequences
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""Potentially Defunct Code, To be Reviewed"""
+# def generate_rep(sequence,topology,identifier):
+#     overall = Sequence(identifier)
+#     gaps = []
+#     for i in range(len(sequence)):
+#         if (sequence[i] == "-"):
+#             gaps.append(i) #Maintain positions of gaps
+#
+#     #Remove all gaps
+#     sequence = re.sub(r"-","",sequence)
+#
+#     #Initialize each protein without annotations
+#     for item in sequence:
+#         x = Residue("",item)
+#         overall.sequence.append(x)
+#
+#     #Annotate each protein
+#     for item in topology:
+#         start = item[0]
+#         end = item[1]
+#         annotation = item[2]
+#         for i in range(start-1,end):
+#             overall.sequence[i].annotation = annotation
+#
+#     #Reinsert gap characters TODO:this may be an iffy process
+#     gap = Residue("","-")
+#     for index in gaps:
+#         overall.sequence.insert(index,gap)
+#
+#     return overall
 
