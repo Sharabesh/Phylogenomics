@@ -50,7 +50,7 @@ class Sequence:
 E_VAL_THRESH = .005
 ALIGN_PERCENT_THRESH = 70
 DATABASE = "nr.61"
-CONSENSUS_THRESH = .5
+CONSENSUS_THRESH = .8
 INPUT_SEQUENCE = "operating_reqs/fasta.txt"
 save_file_name = "operating_reqs/alignment.xml"
 recs_file = "operating_reqs/records.fasta"
@@ -205,8 +205,8 @@ def generate_consensus_withoutTree(query):
     #The matrix of annotated proteins
     topology_dict = msaprocess()
 
-
     target = topology_dict[query]
+
     del topology_dict[query]
 
     topology_matrix = list(topology_dict.values())
@@ -216,7 +216,6 @@ def generate_consensus_withoutTree(query):
     changes = 0
 
     #identifies which chain you want to transfer the consensus annotation to
-    target = topology_dict[query]
 
     for column in range(len(topology_matrix[0])):
 
@@ -234,6 +233,7 @@ def generate_consensus_withoutTree(query):
         if high_agreement(annotations) and high_blosum_scores(acids,target[column].aa):
             target[column].annotation = most_common(annotations)
             changes +=1
+    print(str(changes) + " Changed Made")
     return target
 def high_blosum_scores(acid_lst,targetAA):
     blosum_score = 0
@@ -244,6 +244,24 @@ def high_blosum_scores(acid_lst,targetAA):
 def most_common(annotations):
     return max(annotations,key=lambda x:annotations[x])
 
+def printMDA(target):
+    target.sequence = [x for x in target.sequence if x.aa != '-']
+    overall = [0]
+    count = 0
+    for i in range(len(target)):
+        if i == 0:
+            start = [str(target[i].annotation), "start: " + str(i)]
+            overall[count] = start
+        elif target[i].annotation != target[i-1].annotation:
+            overall[count].append("end: " + str(i-1))
+            count += 1
+            overall.append(0)
+            start = [str(target[i].annotation), "start: " + str(i)]
+            overall[count] = start
+
+    overall[count].append("end: " + str(len(target)))
+    #Prints the annotation if it's not empty or a dashed region
+    return [x for x in overall if x[0] != '']
 
 
 def high_agreement(annotations_dict):
