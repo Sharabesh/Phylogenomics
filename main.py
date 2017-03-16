@@ -15,7 +15,6 @@ from Bio.SubsMat.MatrixInfo import blosum62 as bs
 import re
 
 
-
 #Ensures environment variables are set
 assert os.environ.get("BLASTDB")!=None, "Directory of Blast database must be set"
 
@@ -74,11 +73,11 @@ input_len = length(INPUT_SEQUENCE)
 
 """Using System os
 -qcov_hsp_perc allows for a defined query coverage """
-def sys_gather_homologs(fasta):
+def sys_gather_homologs():
     generic = "blastp -db {0} -query {1} -evalue {2}" \
               " -outfmt {3} -out {4} -qcov_hsp_perc {5}"
     db=DATABASE
-    query = fasta
+    query = INPUT_SEQUENCE
     evalue = E_VAL_THRESH #Change if wanted
     outfmt = 5 # Indicates BLAST XML to write to file
     out = save_file_name #Data written to alignment.xml
