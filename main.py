@@ -62,7 +62,7 @@ def length(fasta):
     return len(input)
 
 
-input_len = length(INPUT_SEQUENCE)
+#input_len = length(INPUT_SEQUENCE)
 
 #
 # """Uses BioPython rather than System os"""
@@ -113,13 +113,20 @@ def generate_msa():
         handle.write(stdout)
 
 
-def msaprocess(): #Takes an input from the generate_msa function
-    processed = SeqIO.parse(recs_file,"fasta")
+def msaprocess(msaFile=None): #Takes an input from the generate_msa function
+    if not msaFile:
+        processed = SeqIO.parse(recs_file,"fasta")
+    else:
+        processed = SeqIO.parse(msaFile,"fasta")
     output = {} #Returns a list of homologs all with TMH annotations
     helices = parse_TMHMM()
     for record in processed:
         identifier = record.name
-        annotation = helices[identifier][1]
+        try:
+            annotation = helices[identifier][1]
+        except:
+            identifier = identifier.split("/")[0]
+            annotation = helices[identifier][1]
         membrane = topology(annotation)
         gapped_sequence = str(record.seq)
         print("Sequence Length is: " + str(len(gapped_sequence)))
@@ -200,16 +207,15 @@ def scoreAcids(residue1, residue2):
 
 
 
-def generate_consensus_withoutTree(query):
+def generate_consensus_withoutTree(query,msaFile=None):
     #The matrix of annotated proteins
-    topology_dict = msaprocess()
+    topology_dict = msaprocess(msaFile)
 
     target = topology_dict[query]
 
     del topology_dict[query]
 
     topology_matrix = list(topology_dict.values())
-
 
     #Identifies the number of alterations were made
     changes = 0
@@ -234,6 +240,7 @@ def generate_consensus_withoutTree(query):
             changes +=1
     print(str(changes) + " Changed Made")
     return target
+
 def high_blosum_scores(acid_lst,targetAA):
     blosum_score = 0
     for acid in acid_lst:
