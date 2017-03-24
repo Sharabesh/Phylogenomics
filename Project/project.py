@@ -5,7 +5,7 @@ import numpy as np
 import csv
 
 """PROGRAMMING CONSTANTS"""
-recs_file = "homologs_with_PDB.fasta"
+recs_file = "homologs_with_functional_sites.fasta"
 MAIN = [] # TO hold matrix of aligned sequences
 
 class Residue:
@@ -84,10 +84,25 @@ def calc_pairwise_identity(seq1,seq2): # 'XP_019815713.1/1-495','XP_019737311.1/
             total += 1
     return matches/total
 
+def calc_pairwise_identity_with_gaps(seq1,seq2):
+    targets = [x for x in MAIN if x.id==seq1 or x.id==seq2]
+    matches = 0
+    total = 0
+    for column in range(len(targets[0])):
+        first = targets[0][column]
+        second = targets[1][column]
+        if first.aa == second.aa and first.aa != "-":
+            matches +=1 
+            total +=1 
+        else:
+            total +=1 
+    return matches/total 
+
+
 def ent(lst):
     prob_dict = {x:lst.count(x)/len(lst) for x in lst}
     probs = np.array(list(prob_dict.values()))
-    return -np.sum(probs * np.log(probs))
+    return -np.sum(probs * np.log2(probs))
 
 
 def calc_column_entropy():
@@ -98,6 +113,24 @@ def calc_column_entropy():
             acids.append(MAIN[protein][column].aa)
         total_entropy.append(ent(acids))
     return total_entropy
+
+def calc_average_id():
+    total_id = [] 
+    for column in range(len(MAIN[0])):
+        ids = [] 
+        for protein in range(len(MAIN)):
+            ids.append(MAIN[protein][column])
+
+        score = 0 
+        pairs = 0
+        for i in range(len(ids)-1):
+            for j in range(i + 1,len(ids)):
+                score += 1 if ids[i].aa == ids[j].aa else 0 
+                # if proteins[i].aa != "-" and proteins[j].aa != "-":
+                pairs += 1
+        total_id.append(score/pairs)
+    return total_id 
+
 
 
 
@@ -111,6 +144,18 @@ def calc_query_coverage(target,seq2):
         if item.aa == "-":
             secondary_gaps += 1
     return (len(secondary) - secondary_gaps) / main
+
+def calc_coverage():
+    coverages = [] 
+    for column in range(len(MAIN[0])):
+        acids = [] 
+        for protein in range(len(MAIN)):
+            acids.append(MAIN[protein][column])
+        gaps = len([x for x in acids if x.aa == "-"])
+        coverages.append(gaps/len(acids))
+    return coverages 
+
+
 
 def min_percent_identity():
     min_id = ('_','_',100)
@@ -128,12 +173,31 @@ def min_percent_identity():
     print("MAX ID: ", max_id)
     return (np.average(all_ids),min_id,max_id)
 
+def calc_identities_with_gaps():
+    min_id = ('_','_',100)
+    max_id = ('_','_',0)
+    all_ids = [] 
+    for i in range(len(MAIN)-1):
+        for j in range(i+1,len(MAIN)):
+            x = calc_pairwise_identity_with_gaps(MAIN[i].id,MAIN[j].id) * 100 
+            if x < min_id[2]:
+                min_id = (MAIN[i].id,MAIN[j].id,x)
+            if x > max_id[2]:
+                max_id = (MAIN[i].id,MAIN[j].id,x)
+            all_ids.append(x)
+    return (np.average(all_ids),min_id,max_id)
+
 
 def generate_stats():
     msaprocess()
     with open("stats.txt","w") as file:
         (average_id,min_id,max_id) = min_percent_identity()
 
+        file.writelines("Average ID is: " + str(average_id) + "%\n")
+        file.writelines("Min Percent ID BETWEEN: " + str(min_id) + "\n")
+        file.writelines("Max Percent ID BETWEEN: " + str(max_id) + "\n")
+        file.writelines("The following show the Percent Identities including gaps\n")
+        (average_id,min_id,max_id) = calc_identities_with_gaps()
         file.writelines("Average ID is: " + str(average_id) + "%\n")
         file.writelines("Min Percent ID BETWEEN: " + str(min_id) + "\n")
         file.writelines("Max Percent ID BETWEEN: " + str(max_id) + "\n")
@@ -190,29 +254,22 @@ def generate_csv():
 
         #Assumes target is first sequence
         target = MAIN[0].id
-        for sequence in MAIN:
-            id = calc_query_coverage(target,sequence.id)
-            file.writelines(str(id) + ',')
+        x = calc_coverage()
+        for item in x:
+            file.writelines(str(item) + ',')
+
         count += 1
-
-
+    with open("average_id.csv","w") as file:
+        for item in range(len(MAIN[0]) - 1):
+            file.writelines(str(item) + ',')
+        file.writelines(str(len(MAIN[0])-1)) #Avoid comma in last step
+        file.writelines("\n") #Finish enumeration
+        x = calc_average_id()
+        for item in x:
+            file.writelines(str(item) + ',')
+        count +=1 
 
     print("Count written: ",count)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def run():
