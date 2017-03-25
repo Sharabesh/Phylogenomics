@@ -148,7 +148,6 @@ def parse_TMHMM():
     return TMHMM_results
     #Now TMHMM Results are set as id:(pred_hel_number,pred_topo,pred_len)
 
-
 def topology(annotation):#Parses the TMHMM String
     output = [] # A list of tuples with start,end,annotation
     processed = annotation.replace("-",":").replace("o","] [").replace("i","] [").split(" ")[1:-1]
@@ -170,14 +169,16 @@ def generate_rep(sequence,topology,identifier):
         x = Residue("",item)
         overall.sequence.append(x)
 
-
     i = 0
     count = 0
     for item in topology:
         start = item[0]
         end = item[1]
         annotation = item[2]
-
+        if annotation == 'i':
+            message = "I"
+        else:
+            message = "E"
         #Get to the starting position excluding gap counts
         while count < start:
             if sequence[i] == "-":
@@ -185,6 +186,7 @@ def generate_rep(sequence,topology,identifier):
             else:
                 i+=1
                 count += 1
+                overall.sequence[i-1].annotation = message #Label early positions as Intra or ExtraCellular
         while count < end + 1:
             if sequence[i] == "-":
                 i+=1
@@ -204,6 +206,22 @@ def scoreAcids(residue1, residue2):
             return bs[(residue2,residue1)]
         except:
             return 0 #Score of a gap character is set to 0
+def generate_window(sequence,window,threshold=0.5):
+    for i in range(len(sequence)-window,window):
+        acids = [chunk.aa for chunk in sequence[i:i+window]]
+        score = {}
+        for item in acids:
+            if item in score:
+                score[item] += 1
+            else:
+                score[item] = 1
+        consensus = max(score,key=lambda x:score[x])
+        if score[consensus]/sum(score.values()) > threshold: #A consensus exists
+            for i  in range(i,i+window):
+                sequence[i] = consensus
+    return sequence
+
+
 
 
 
@@ -368,15 +386,11 @@ def distances(input):
 
 """Runs the entire phylogenetic process with RAxML"""
 def run_():
-    sys_gather_homologs(INPUT_SEQUENCE)
+    sys_gather_homologs()
     parse_xml()
     generate_msa()
     mask_msa()
     generate_tree_RAxML()
-
-
-
-
 
 
 

@@ -156,7 +156,6 @@ def calc_coverage():
     return coverages 
 
 
-
 def min_percent_identity():
     min_id = ('_','_',100)
     max_id = ('_','_',0)
