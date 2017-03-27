@@ -132,8 +132,6 @@ def calc_average_id():
     return total_id 
 
 
-
-
 #Calculate Query Coverage
 """ (hit_length - gap_open) / query_length"""
 def calc_query_coverage(target,seq2):
@@ -151,12 +149,12 @@ def calc_coverage():
         acids = [] 
         for protein in range(len(MAIN)):
             acids.append(MAIN[protein][column])
-        gaps = len([x for x in acids if x.aa == "-"])
-        coverages.append(gaps/len(acids))
+        not_gaps = len([x for x in acids if x.aa != "-"])
+        coverages.append(not_gaps/len(acids))
     return coverages 
 
 
-def min_percent_identity():
+def min_percent_identity(): #Computation without gaps 
     min_id = ('_','_',100)
     max_id = ('_','_',0)
     all_ids = []
@@ -172,7 +170,7 @@ def min_percent_identity():
     print("MAX ID: ", max_id)
     return (np.average(all_ids),min_id,max_id)
 
-def calc_identities_with_gaps():
+def calc_identities_with_gaps(): #Computation with Gaps 
     min_id = ('_','_',100)
     max_id = ('_','_',0)
     all_ids = [] 
@@ -196,12 +194,17 @@ def generate_stats():
         file.writelines("Min Percent ID BETWEEN: " + str(min_id) + "\n")
         file.writelines("Max Percent ID BETWEEN: " + str(max_id) + "\n")
         file.writelines("The following show the Percent Identities including gaps\n")
+        file.writelines("\n\n\n\n\n")
         (average_id,min_id,max_id) = calc_identities_with_gaps()
         file.writelines("Average ID is: " + str(average_id) + "%\n")
         file.writelines("Min Percent ID BETWEEN: " + str(min_id) + "\n")
         file.writelines("Max Percent ID BETWEEN: " + str(max_id) + "\n")
     print("Stats are in stats.txt")
     return
+
+
+
+
 
 
 def generate_csv():
