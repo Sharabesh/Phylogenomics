@@ -14,7 +14,6 @@ import dendropy
 from Bio.SubsMat.MatrixInfo import blosum62 as bs
 import re
 
-
 #Ensures environment variables are set
 assert os.environ.get("BLASTDB")!=None, "Directory of Blast database must be set"
 
@@ -49,12 +48,14 @@ class Sequence:
 E_VAL_THRESH = .005
 ALIGN_PERCENT_THRESH = 70
 DATABASE = "nr.61"
-CONSENSUS_THRESH = .8
+CONSENSUS_THRESH = .6
 INPUT_SEQUENCE = "operating_reqs/fasta.txt"
 save_file_name = "operating_reqs/alignment.xml"
 recs_file = "operating_reqs/records.fasta"
 tree_file = 'operating_reqs/tree_files/RAxML_bestTree.ML_out'
 tmhmm_file='operating_reqs/tmhmm.html'
+unaligned_identifier = "operating_reqs/unaligned_homologs.fasta"
+listed_homologs = "operating_reqs/listed_homologs.fasta"
 
 
 def length(fasta):
@@ -69,6 +70,17 @@ def length(fasta):
 # def gather_homologs(fasta): #File location passed as input ("fasta.txt")
 #     blasted = NcbiblastpCommandline(query=fasta,db="nr.61",evalue=1,outfmt=5,out="alignment.xml")
 #     blasted()
+
+
+def gather_homologs_unaligned(): #Can only be run on a server with the swissprot database locally
+    cmd0 = 'blastp -query kcna1_human.fasta -max_target_seqs 100 -db swissprot -outfmt "6 sseqid" >' +  unaligned_identifier #Writes to unaligned_homologs
+    cmd1 = "blastdbcmd -entry_batch unaligned_homologs.fasta -db swissprot >" + listed_homologs #writes to listed_homologs
+
+def send_homologs():
+    with open(listed_homologs) as f:
+        with open(recs_file, "w") as f1:
+            for line in f:
+                f1.write(line)
 
 
 """Using System os
@@ -106,6 +118,9 @@ def parse_xml(): #This is alignment.xml
     _ = SeqIO.write(recs, recs_file, "fasta")
     print("Done")
 
+
+
+
 def generate_msa():
     mafft_cline = MafftCommandline(input=recs_file)
     stdout, stderr = mafft_cline()
@@ -129,7 +144,6 @@ def msaprocess(msaFile=None): #Takes an input from the generate_msa function
             annotation = helices[identifier][1]
         membrane = topology(annotation)
         gapped_sequence = str(record.seq)
-        print("Sequence Length is: " + str(len(gapped_sequence)))
         representation = generate_rep(gapped_sequence,membrane,identifier)
         output[identifier] = representation
     return output
@@ -158,7 +172,6 @@ def topology(annotation):#Parses the TMHMM String
         check = item[0] + '-' + item[1]
         notation = annotation[annotation.index(check)-1]
         output.append((start,end,notation))
-        print((start,end,notation))
     return output
 
 
@@ -186,7 +199,6 @@ def generate_rep(sequence,topology,identifier):
             else:
                 i+=1
                 count += 1
-                overall.sequence[i-1].annotation = message #Label early positions as Intra or ExtraCellular
         while count < end + 1:
             if sequence[i] == "-":
                 i+=1
@@ -206,7 +218,7 @@ def scoreAcids(residue1, residue2):
             return bs[(residue2,residue1)]
         except:
             return 0 #Score of a gap character is set to 0
-def generate_window(sequence,window,threshold=0.5):
+def generate_window(sequence,window=15,threshold=0.5):
     for i in range(len(sequence)-window,window):
         acids = [chunk.aa for chunk in sequence[i:i+window]]
         score = {}
@@ -222,14 +234,14 @@ def generate_window(sequence,window,threshold=0.5):
     return sequence
 
 
-
-
-
-def generate_consensus_withoutTree(query,msaFile=None):
+def generate_consensus_withoutTree(query,msaFile=recs_file, benchmarking=False):
     #The matrix of annotated proteins
     topology_dict = msaprocess(msaFile)
 
     target = topology_dict[query]
+    if benchmarking:
+        for i in range(len(target)): #Start with blank template if benchmarking
+            target[i].annotation = "-"
 
     del topology_dict[query]
 
@@ -257,7 +269,7 @@ def generate_consensus_withoutTree(query,msaFile=None):
             target[column].annotation = most_common(annotations)
             changes +=1
     print(str(changes) + " Changed Made")
-    return target
+    return generate_window(target)
 
 def high_blosum_scores(acid_lst,targetAA):
     blosum_score = 0
