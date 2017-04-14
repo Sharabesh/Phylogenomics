@@ -1,48 +1,9 @@
 
 
-IMPORTANT WARNING: Sequences XP_019739076.1 and XP_019739075.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019739059.1 and XP_019739060.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019716718.1 and XP_019716719.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019765364.1 and XP_019865521.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019714204.1 and XP_019714203.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019812437.1 and XP_019812439.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019812437.1 and XP_019812436.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019712556.1 and XP_019712555.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019881853.1 and XP_019881844.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019721760.1 and XP_019721759.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019721760.1 and XP_019721758.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019761130.1 and XP_019761129.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019731748.1 and XP_019732074.1 are exactly identical
-
-
-IMPORTANT WARNING: Sequences XP_019730703.1 and XP_019730702.1 are exactly identical
+IMPORTANT WARNING: Sequences sp|P63142|KCNA2_RAT and sp|P63141|KCNA2_MOUSE are exactly identical
 
 IMPORTANT WARNING
-Found 14 sequences that are exactly identical to other sequences in the alignment.
+Found 1 sequence that is exactly identical to other sequences in the alignment.
 Normally they should be excluded from the analysis.
 
 An alignment file with sequence duplicates removed has already
@@ -64,9 +25,9 @@ Akifumi S. Tanabe (NRIFS)
 Charlie Taylor    (UF)
 
 
-Alignment has 309 distinct alignment patterns
+Alignment has 1466 distinct alignment patterns
 
-Proportion of gaps and completely undetermined characters in this alignment: 3.37%
+Proportion of gaps and completely undetermined characters in this alignment: 65.44%
 
 RAxML rapid hill-climbing mode
 
@@ -83,7 +44,7 @@ Likelihood of final tree will be evaluated and optimized under GAMMA
 GAMMA Model parameters will be estimated up to an accuracy of 0.1000000000 Log Likelihood units
 
 Partition: 0
-Alignment Patterns: 309
+Alignment Patterns: 1466
 Name: No Name Provided
 DataType: AA
 Substitution Matrix: DAYHOFF
@@ -100,21 +61,21 @@ raxmlHPC -s /Users/sharabesh97/Desktop/bioe144/operating_reqs/records.fasta -m P
 Partition: 0 with name: No Name Provided
 Base frequencies: 0.087 0.041 0.040 0.047 0.033 0.038 0.050 0.089 0.034 0.037 0.085 0.080 0.015 0.040 0.051 0.070 0.059 0.010 0.030 0.065 
 
-Inference[0]: Time 186.256749 CAT-based likelihood -16593.072710, best rearrangement setting 5
+Inference[0]: Time 917.045286 CAT-based likelihood -37435.367725, best rearrangement setting 5
 alpha[0]: 1.000000 
 
 
 Conducting final model optimizations on all 1 trees under GAMMA-based models ....
 
-Inference[0] final GAMMA-based Likelihood: -16885.425963 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out
+Inference[0] final GAMMA-based Likelihood: -38591.101985 tree written to file /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_result.ML_out
 
 
-Starting final GAMMA-based thorough Optimization on tree 0 likelihood -16885.425963 .... 
+Starting final GAMMA-based thorough Optimization on tree 0 likelihood -38591.101985 .... 
 
-Final GAMMA-based Score of best tree -16883.315660
+Final GAMMA-based Score of best tree -38590.739928
 
 Program execution info written to /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_info.ML_out
 Best-scoring ML tree written to: /Users/sharabesh97/Desktop/bioe144/operating_reqs/tree_files/RAxML_bestTree.ML_out
 
-Overall execution time: 668.915759 secs or 0.185810 hours or 0.007742 days
+Overall execution time: 11390.106389 secs or 3.163918 hours or 0.131830 days
 

@@ -13,6 +13,9 @@ import os
 import dendropy
 from Bio.SubsMat.MatrixInfo import blosum62 as bs
 import re
+import numpy as np
+
+
 
 #Ensures environment variables are set
 assert os.environ.get("BLASTDB")!=None, "Directory of Blast database must be set"
@@ -27,6 +30,8 @@ class Residue:
     def __init__(self,annotation,aa):
         self.annotation = annotation
         self.aa = aa
+    def __repr__(self):
+        return self.aa
 #Data structure to represent the a sequence of Residues/indels
 class Sequence:
     def __init__(self,identifier):
@@ -48,7 +53,7 @@ class Sequence:
 E_VAL_THRESH = .005
 ALIGN_PERCENT_THRESH = 70
 DATABASE = "nr.61"
-CONSENSUS_THRESH = .6
+# CONSENSUS_THRESH = 0.5
 INPUT_SEQUENCE = "operating_reqs/fasta.txt"
 save_file_name = "operating_reqs/alignment.xml"
 recs_file = "operating_reqs/records.fasta"
@@ -132,7 +137,7 @@ def msaprocess(msaFile=None): #Takes an input from the generate_msa function
     if not msaFile:
         processed = SeqIO.parse(recs_file,"fasta")
     else:
-        processed = SeqIO.parse(msaFile,"fasta")
+        processed = SeqIO.parse(msaFile, "fasta")
     output = {} #Returns a list of homologs all with TMH annotations
     helices = parse_TMHMM()
     for record in processed:
@@ -177,11 +182,9 @@ def topology(annotation):#Parses the TMHMM String
 
 def generate_rep(sequence,topology,identifier):
     overall = Sequence(identifier)
-
     for item in sequence:
         x = Residue("",item)
         overall.sequence.append(x)
-
     i = 0
     count = 0
     for item in topology:
@@ -269,7 +272,7 @@ def generate_consensus_withoutTree(query,msaFile=recs_file, benchmarking=False):
             target[column].annotation = most_common(annotations)
             changes +=1
     print(str(changes) + " Changed Made")
-    return generate_window(target)
+    return target #Removing windowing temporarily, drops accuracy.
 
 def high_blosum_scores(acid_lst,targetAA):
     blosum_score = 0
@@ -300,7 +303,7 @@ def printMDA(target):
     return [x for x in overall if x[0] != '']
 
 
-def high_agreement(annotations_dict):
+def high_agreement(annotations_dict,CONSENSUS_THRESH=0):
     mostcommon = max(annotations_dict, key = lambda x: annotations_dict[x])
     if annotations_dict[mostcommon] / sum(annotations_dict.values()) > CONSENSUS_THRESH:
         return True
@@ -322,8 +325,7 @@ def mask_msa(): #DON"T MASK UNTIL AFTER MSA_PROCESS()!
 """Uses RaxML to generate tree which is read out by Bio's Phylo module"""
 def generate_tree_RAxML():
     directory = os.getcwd()
-    #Delete all existing tree files 
-    os.system("rm {0}/*".format(directory + '/operating_reqs/tree_files'))
+    #Delete all existing tree files
     command = 'raxmlHPC -s {0} -m {1} \
             -p {2} -n ML_out -# {3} -w {4}'
     sequence_file_name = directory + '/' + recs_file
@@ -342,6 +344,11 @@ def generate_tree_phyml():
     pass #This is loaded in a separate file in case
 
 
+
+
+
+
+
 """
 A high positive score indicates the majority of proteins have
 a given annotation. Output: {(Score, i),(Score,o),(Score,-)}
@@ -349,25 +356,31 @@ Close proteins with the annotation will incremement the corresponding score
 """
 
 
-def scoring_func(tree,sequences,target):
+def scoring_func(id,msafile,CONSENSUS_THRESH=0):
+    tree = generate_tree_RAxML()
+    sequences = msaprocess(msafile)
+    target = sequences[id]
     proteins = list(sequences.keys())
     changes = 0
-    for sequence in range(len(sequences[0])):
+    for sequence in range(len(sequences[proteins[0]])):
         totals = {'i':0,'o':0,'-':0}
         for protein in range(len(sequences)):
-            point = sequences[proteins[sequence]][protein]
-            totals[point.annotation] += score(tree,sequences[proteins[protein]])
+            point = sequences[proteins[protein]][sequence]
+            if point.annotation != "":
+                totals[point.annotation] += score(tree,target.id,sequences[proteins[protein]].id)
         sum_of_vals = totals['i'] + totals['o'] + totals['-']
-        if totals['i']/sum_of_vals > CONSENSUS_THRESH:
-            target[sequence].annotation = 'i'
-            changes += 1
-        if totals['o']/sum_of_vals > CONSENSUS_THRESH:
-            target[sequence].annotation = 'o'
-            changes += 1
-        if totals['-']/sum_of_vals > CONSENSUS_THRESH:
-            target[sequence].annotation = '-'
-            changes += 1
+        if sum_of_vals != 0:
+            if totals['i']/sum_of_vals > CONSENSUS_THRESH:
+                target[sequence].annotation = 'i'
+                changes += 1
+            if totals['o']/sum_of_vals > CONSENSUS_THRESH:
+                target[sequence].annotation = 'o'
+                changes += 1
+            if totals['-']/sum_of_vals > CONSENSUS_THRESH:
+                target[sequence].annotation = '-'
+                changes += 1
     print(str(changes) + " Changes Made")
+    return target
 
 
 

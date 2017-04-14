@@ -47,6 +47,16 @@ def process(files): #the file is a text file of a swissprot protein
     return output
 
 
+def get_TMHMM_data():
+    send_homologs()
+    generate_msa()
+    x = msaprocess()['sp|Q09470|KCNA1_HUMAN']
+    return x
+
+
+
+
+
 def get_target_data():
     send_homologs()
     generate_msa()
@@ -74,9 +84,11 @@ def num_transmembrane(target):
 
 
 
-def use_consensus(msaFile=recs_file):
-    annotated_target = generate_consensus_withoutTree(get_target_data().id, msaFile)
-
+def use_consensus(msaFile=recs_file,func=generate_consensus_withoutTree,threshold=-10):
+    if threshold == -10:
+        annotated_target = func(get_target_data().id, msaFile) #Benchmarking = True does not currently work, drops accruacy to 18%
+    else:
+        annotated_target = func(get_target_data().id,msaFile,threshold)
     correct_target = get_target_data()
 
     for i in range(len(annotated_target)):
@@ -87,12 +99,36 @@ def use_consensus(msaFile=recs_file):
             correct_target[i].annotation = "H"
     agreements = 0
     for i in range(len(annotated_target)):
-        if correct_target[i].annotation == annotated_target[i].annotation:
+        if correct_target[i].annotation == annotated_target[i].annotation and annotated_target[i].annotation == "H":
             agreements += 1
+    print("Accuracy is: ", (agreements/num_transmembrane(correct_target)) * 100)
+    return (agreements/num_transmembrane(correct_target)) * 100
 
-    return (agreements/len(correct_target)) * 100
+def generate_accuracies():
+    with open("tree_accuracu.txt","w") as file:
+        for i in np.arange(0,1,0.05):
+            threshold = i
+            accuracy = use_consensus(func=scoring_func,threshold=i)
+            file.writelines(str((threshold,accuracy)))
+            file.writelines("\n")
+    return
 
 
+
+def test_without_me():
+    correct_target = get_target_data()
+    annotated_target = get_TMHMM_data()
+    for i in range(len(annotated_target)):
+        if annotated_target[i].annotation == 'i' or annotated_target[i].annotation == 'o':
+            annotated_target[i].annotation = "H"
+    for i in range(len(correct_target)):
+        if correct_target[i].annotation == "TRANSMEM":
+            correct_target[i].annotation = "H"
+    agreements = 0
+    for i in range(len(annotated_target)):
+        if correct_target[i].annotation == annotated_target[i].annotation and correct_target[i].annotation == "H":
+            agreements += 1
+    return (agreements/num_transmembrane(correct_target)) * 100
 
 
 
