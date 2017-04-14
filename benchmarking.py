@@ -106,7 +106,7 @@ def use_consensus(msaFile=recs_file,func=generate_consensus_withoutTree,threshol
 
 def generate_accuracies():
     with open("tree_accuracu.txt","w") as file:
-        for i in np.arange(0,1,0.05):
+        for i in np.arange(0,2,0.05):
             threshold = i
             accuracy = use_consensus(func=scoring_func,threshold=i)
             file.writelines(str((threshold,accuracy)))
