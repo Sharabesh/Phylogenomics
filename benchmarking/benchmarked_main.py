@@ -15,6 +15,7 @@ from Bio.SubsMat.MatrixInfo import blosum62 as bs
 import re
 import numpy as np
 
+
 #Ensures environment variables are set
 assert os.environ.get("BLASTDB")!=None, "Directory of Blast database must be set"
 
@@ -49,16 +50,19 @@ class Sequence:
 
 #OPERATING PROCESSES
 E_VAL_THRESH = .005
-ALIGN_PERCENT_THRESH = 80
+ALIGN_PERCENT_THRESH = 70
 DATABASE = "nr.61"
 # CONSENSUS_THRESH = 0.5
-INPUT_SEQUENCE = "operating_reqs/fasta.txt"
-save_file_name = "operating_reqs/alignment.xml"
-recs_file = "operating_reqs/records.fasta"
-tree_file = 'operating_reqs/tree_files/RAxML_bestTree.ML_out'
-tmhmm_file='operating_reqs/tmhmm.html'
-unaligned_identifier = "operating_reqs/unaligned_homologs.fasta"
-listed_homologs = "operating_reqs/listed_homologs.fasta"
+
+
+PROTEIN = "zo2"
+
+INPUT_SEQUENCE = "internal_files/"  + PROTEIN + "/fasta.fasta"
+save_file_name = "internal_files/" + PROTEIN + "/alignment.xml"
+recs_file = "internal_files/" + PROTEIN + "/records.fasta"
+tree_file = 'internal_files/' + PROTEIN + '/tree_files/RAxML_bestTree.ML_out'
+tmhmm_file='internal_files/' + PROTEIN + '/tmhmm.html'
+listed_homologs = "internal_files/" + PROTEIN + "/unaligned_homologs.fasta"
 
 
 def length(fasta):
@@ -120,7 +124,6 @@ def parse_xml(): #This is alignment.xml
             recs.append(filtered_seqrec)
     _ = SeqIO.write(recs, recs_file, "fasta")
     print("Done")
-
 
 
 
@@ -219,8 +222,6 @@ def scoreAcids(residue1, residue2):
             return bs[(residue2,residue1)]
         except:
             return 0 #Score of a gap character is set to 0
-
-
 def generate_window(sequence,window=15,threshold=0.5):
     for i in range(len(sequence)-window,window):
         acids = [chunk.aa for chunk in sequence[i:i+window]]
@@ -332,13 +333,13 @@ def generate_tree_RAxML():
     substitution_model = "PROTCATDAYHOFF" 
     parsinomy_random_seed = "1000"
     num_runs = "1"
-    write_file = directory + '/' + 'operating_reqs/tree_files' 
+    write_file = directory + '/' + 'internal_files/' + PROTEIN + '/tree_files'
     os.system(command.format(sequence_file_name,
         substitution_model,parsinomy_random_seed,
         num_runs, write_file))
     tree = Phylo.read(tree_file, 'newick')
     Phylo.draw_ascii(tree)
-    return tree 
+    return tree
 
 def generate_tree_phyml():
     pass #This is loaded in a separate file in case

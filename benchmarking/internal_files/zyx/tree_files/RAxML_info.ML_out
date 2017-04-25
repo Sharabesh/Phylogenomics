@@ -1,0 +1,120 @@
+
+
+IMPORTANT WARNING: Sequences sp|Q8BFW7|LPP_MOUSE and sp|Q5XI07|LPP_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|G5E5X0|LIMD1_BOVIN and sp|B5DEH0|LIMD1_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|G5E5X0|LIMD1_BOVIN and sp|Q9QXD8|LIMD1_MOUSE are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q5U2Z2|AJUBA_RAT and sp|Q91XC0|AJUBA_MOUSE are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q5U2Z2|AJUBA_RAT and sp|Q96IF1|AJUBA_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q5U2Z2|AJUBA_RAT and sp|E1BKA3|AJUBA_BOVIN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q62219|TGFI1_MOUSE and sp|Q99PD6|TGFI1_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q8VI36|PAXI_MOUSE and sp|P49023|PAXI_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q8VI36|PAXI_MOUSE and sp|Q66H76|PAXI_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q8VI36|PAXI_MOUSE and sp|Q5R7I1|PAXI_PONAB are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q99JW4|LIMS1_MOUSE and sp|P48059|LIMS1_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q2KJ33|LIMS2_BOVIN and sp|Q7Z4I7|LIMS2_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q3ZBI6|FHL3_BOVIN and sp|Q13643|FHL3_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q69ZX8|ABLM3_MOUSE and sp|O94929|ABLM3_HUMAN are exactly identical
+
+IMPORTANT WARNING
+Found 14 sequences that are exactly identical to other sequences in the alignment.
+Normally they should be excluded from the analysis.
+
+Just in case you might need it, an alignment file with 
+sequence duplicates removed is printed to file /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zyx/zyx_records.fasta.reduced
+
+
+This is RAxML version 8.2.9 released by Alexandros Stamatakis on July 20 2016.
+
+With greatly appreciated code contributions by:
+Andre Aberer      (HITS)
+Simon Berger      (HITS)
+Alexey Kozlov     (HITS)
+Kassian Kobert    (HITS)
+David Dao         (KIT and HITS)
+Sarah Lutteropp   (KIT and HITS)
+Nick Pattengale   (Sandia)
+Wayne Pfeiffer    (SDSC)
+Akifumi S. Tanabe (NRIFS)
+Charlie Taylor    (UF)
+
+
+Alignment has 95 distinct alignment patterns
+
+Proportion of gaps and completely undetermined characters in this alignment: 1.68%
+
+RAxML rapid hill-climbing mode
+
+Using 1 distinct models/data partitions with joint branch length optimization
+
+
+Executing 1 inferences on the original alignment using 1 distinct randomized MP trees
+
+All free model parameters will be estimated by RAxML
+ML estimate of 25 per site rate categories
+
+Likelihood of final tree will be evaluated and optimized under GAMMA
+
+GAMMA Model parameters will be estimated up to an accuracy of 0.1000000000 Log Likelihood units
+
+Partition: 0
+Alignment Patterns: 95
+Name: No Name Provided
+DataType: AA
+Substitution Matrix: DAYHOFF
+Using fixed base frequencies
+
+
+
+
+RAxML was called as follows:
+
+raxmlHPC -s /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zyx/zyx_records.fasta -m PROTCATDAYHOFF -p 1000 -n ML_out -# 1 -w /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zyx/tree_files 
+
+
+Partition: 0 with name: No Name Provided
+Base frequencies: 0.087 0.041 0.040 0.047 0.033 0.038 0.050 0.089 0.034 0.037 0.085 0.080 0.015 0.040 0.051 0.070 0.059 0.010 0.030 0.065 
+
+Inference[0]: Time 92.589289 CAT-based likelihood -6825.961380, best rearrangement setting 5
+alpha[0]: 1.000000 
+
+
+Conducting final model optimizations on all 1 trees under GAMMA-based models ....
+
+Inference[0] final GAMMA-based Likelihood: -6910.802562 tree written to file /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zyx/tree_files/RAxML_result.ML_out
+
+
+Starting final GAMMA-based thorough Optimization on tree 0 likelihood -6910.802562 .... 
+
+Final GAMMA-based Score of best tree -6910.802489
+
+Program execution info written to /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zyx/tree_files/RAxML_info.ML_out
+Best-scoring ML tree written to: /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zyx/tree_files/RAxML_bestTree.ML_out
+
+Overall execution time: 216.193461 secs or 0.060054 hours or 0.002502 days
+

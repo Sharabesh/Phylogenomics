@@ -4,8 +4,19 @@ from Bio import SwissProt as sp
 from Bio import SeqIO
 import os
 import subprocess
-from main import *
+from benchmarked_main import *
 
+
+
+if PROTEIN == 'zo2':
+    id = "ZO2_HUMAN"
+    prot = "sp|Q9UDY2|ZO2_HUMAN"
+elif PROTEIN == 'zyx':
+    id = "ZYX_HUMAN"
+    prot = "sp|Q15942|ZYX_HUMAN"
+else:
+    id = "TLR1_HUMAN"
+    prot = "sp|Q15399|TLR1_HUMAN"
 
 #Using Belvu select only those with specified percent identity
 THIRTY_PERCENT_FILE = "lessThan30-40.fasta"
@@ -50,7 +61,7 @@ def process(files): #the file is a text file of a swissprot protein
 def get_TMHMM_data():
     send_homologs()
     generate_msa()
-    x = msaprocess()['sp|Q09470|KCNA1_HUMAN']
+    x = msaprocess()[prot]
     return x
 
 
@@ -60,7 +71,7 @@ def get_TMHMM_data():
 def get_target_data():
     send_homologs()
     generate_msa()
-    textrecord = urllib.request.urlopen(LINK.format("KCNA1_HUMAN"))
+    textrecord = urllib.request.urlopen(LINK.format(id))
     textrecord = process(textrecord)
     helices = [x for x in textrecord if x[0] == "TRANSMEM"]
     for i in range(len(helices)):
@@ -105,21 +116,22 @@ def use_consensus(msaFile=recs_file,func=generate_consensus_withoutTree,threshol
     for i in range(len(annotated_target)):
         if correct_target[i].annotation == annotated_target[i].annotation:
             total_agreements +=1
-    # print("Overall Accuracy is: ", total_agreements/len(annotated_target) * 100)
-    print("Consensus TMHMM Accuracy is: ", (agreements/num_transmembrane(correct_target)) * 100)
+    try:
+        print("Accuracy is: ", (agreements/num_transmembrane(correct_target)) * 100)
+    except: #There are no transmembrane regions
+        print("Accuracy is: ", total_agreements / len(correct_target) * 100)
     test_without_me()
-    return (agreements/num_transmembrane(correct_target)) * 100
+    # return ((agreements/num_transmembrane(correct_target) * 100), (total_agreements / len(correct_target) * 100))
+
 
 def generate_accuracies():
     with open("tree_accuracy.txt","w") as file:
         for i in np.arange(0,2,0.05):
             threshold = i
-            accuracy = use_consensus(func=scoring_func,threshold=i)
-            file.writelines(str((threshold,accuracy)))
+            accuracy_tmh,accuracy_full = use_consensus(func=scoring_func,threshold=i)
+            file.writelines(str((threshold,accuracy_tmh,accuracy_full)))
             file.writelines("\n")
     return
-
-
 
 
 def test_without_me():
@@ -135,15 +147,15 @@ def test_without_me():
     for i in range(len(annotated_target)):
         if correct_target[i].annotation == annotated_target[i].annotation and correct_target[i].annotation == "H":
             agreements += 1
-    total_agree = 0
+    total_agreements = 0
     for i in range(len(annotated_target)):
         if correct_target[i].annotation == annotated_target[i].annotation:
-            total_agree +=1
+            total_agreements += 1
     print("TMHMM Alone")
-    # print("Total Agreements ",total_agree/len(annotated_target) * 100)
-    print("TMH Agreements: ", (agreements/num_transmembrane(correct_target)) * 100)
-    return (agreements/num_transmembrane(correct_target)) * 100
-
+    try:
+        print("Correctly Predicted TMHMM ",(agreements/num_transmembrane(correct_target)) * 100)
+    except: #No Transmembrane segments
+        print("Correctly Predicted TMHMM ", total_agreements/len(annotated_target) * 100)
 
 
 

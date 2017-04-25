@@ -1,0 +1,135 @@
+
+
+IMPORTANT WARNING: Sequences sp|Q9UDY2|ZO2_HUMAN and sp|Q95168|ZO2_CANLF are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q9UDY2|ZO2_HUMAN and sp|Q9Z0U1|ZO2_MOUSE are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|O97758|ZO1_CANLF and sp|P39447|ZO1_MOUSE are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|O97758|ZO1_CANLF and sp|Q07157|ZO1_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q91XM9|DLG2_MOUSE and sp|Q63622|DLG2_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q91XM9|DLG2_MOUSE and sp|Q15700|DLG2_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|P31016|DLG4_RAT and sp|Q62108|DLG4_MOUSE are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|P31016|DLG4_RAT and sp|P78352|DLG4_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q92796|DLG3_HUMAN and sp|P70175|DLG3_MOUSE are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q92796|DLG3_HUMAN and sp|Q62936|DLG3_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q811D0|DLG1_MOUSE and sp|Q62696|DLG1_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q8BH60|GOPC_MOUSE and sp|Q5RD32|GOPC_PONAB are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q9Y3R0|GRIP1_HUMAN and sp|Q925T6|GRIP1_MOUSE are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q9Y3R0|GRIP1_HUMAN and sp|P97879|GRIP1_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q8VBX6|MPDZ_MOUSE and sp|O55164|MPDZ_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q8VBX6|MPDZ_MOUSE and sp|O75970|MPDZ_HUMAN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q9D6K5|SYJ2B_MOUSE and sp|Q3T0C9|SYJ2B_BOVIN are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q9D6K5|SYJ2B_MOUSE and sp|Q9WVJ4|SYJ2B_RAT are exactly identical
+
+
+IMPORTANT WARNING: Sequences sp|Q9D6K5|SYJ2B_MOUSE and sp|P57105|SYJ2B_HUMAN are exactly identical
+
+IMPORTANT WARNING
+Found 19 sequences that are exactly identical to other sequences in the alignment.
+Normally they should be excluded from the analysis.
+
+Just in case you might need it, an alignment file with 
+sequence duplicates removed is printed to file /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zo2/records.fasta.reduced
+
+
+This is RAxML version 8.2.9 released by Alexandros Stamatakis on July 20 2016.
+
+With greatly appreciated code contributions by:
+Andre Aberer      (HITS)
+Simon Berger      (HITS)
+Alexey Kozlov     (HITS)
+Kassian Kobert    (HITS)
+David Dao         (KIT and HITS)
+Sarah Lutteropp   (KIT and HITS)
+Nick Pattengale   (Sandia)
+Wayne Pfeiffer    (SDSC)
+Akifumi S. Tanabe (NRIFS)
+Charlie Taylor    (UF)
+
+
+Alignment has 42 distinct alignment patterns
+
+Proportion of gaps and completely undetermined characters in this alignment: 5.31%
+
+RAxML rapid hill-climbing mode
+
+Using 1 distinct models/data partitions with joint branch length optimization
+
+
+Executing 1 inferences on the original alignment using 1 distinct randomized MP trees
+
+All free model parameters will be estimated by RAxML
+ML estimate of 25 per site rate categories
+
+Likelihood of final tree will be evaluated and optimized under GAMMA
+
+GAMMA Model parameters will be estimated up to an accuracy of 0.1000000000 Log Likelihood units
+
+Partition: 0
+Alignment Patterns: 42
+Name: No Name Provided
+DataType: AA
+Substitution Matrix: DAYHOFF
+Using fixed base frequencies
+
+
+
+
+RAxML was called as follows:
+
+raxmlHPC -s /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zo2/records.fasta -m PROTCATDAYHOFF -p 1000 -n ML_out -# 1 -w /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zo2/tree_files 
+
+
+Partition: 0 with name: No Name Provided
+Base frequencies: 0.087 0.041 0.040 0.047 0.033 0.038 0.050 0.089 0.034 0.037 0.085 0.080 0.015 0.040 0.051 0.070 0.059 0.010 0.030 0.065 
+
+Inference[0]: Time 84.887602 CAT-based likelihood -3255.480751, best rearrangement setting 15
+alpha[0]: 1.000000 
+
+
+Conducting final model optimizations on all 1 trees under GAMMA-based models ....
+
+Inference[0] final GAMMA-based Likelihood: -3305.053241 tree written to file /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zo2/tree_files/RAxML_result.ML_out
+
+
+Starting final GAMMA-based thorough Optimization on tree 0 likelihood -3305.053241 .... 
+
+Final GAMMA-based Score of best tree -3304.710628
+
+Program execution info written to /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zo2/tree_files/RAxML_info.ML_out
+Best-scoring ML tree written to: /Users/sharabesh97/Desktop/bioe144/benchmarking/internal_files/zo2/tree_files/RAxML_bestTree.ML_out
+
+Overall execution time: 150.047210 secs or 0.041680 hours or 0.001737 days
+

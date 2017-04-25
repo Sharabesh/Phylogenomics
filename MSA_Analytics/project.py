@@ -120,7 +120,6 @@ def calc_average_id():
         ids = [] 
         for protein in range(len(MAIN)):
             ids.append(MAIN[protein][column])
-
         score = 0 
         pairs = 0
         for i in range(len(ids)-1):
@@ -191,14 +190,14 @@ def generate_stats():
         (average_id,min_id,max_id) = min_percent_identity()
 
         file.writelines("Average ID is: " + str(average_id) + "%\n")
-        file.writelines("Min Percent ID BETWEEN: " + str(min_id) + "\n")
-        file.writelines("Max Percent ID BETWEEN: " + str(max_id) + "\n")
-        file.writelines("The following show the Percent Identities including gaps\n")
+        file.writelines("Min Percent ID BETWEEN: " + str(min_id[0]) + " and " + str(min_id[1]) + " With Identity " + str(min_id[2]) + "%" + "\n")
+        file.writelines("Max Percent ID BETWEEN: " + str(max_id[0]) + " and " + str(max_id[1]) + " With Identity " + str(max_id[2]) + "%" + "\n")
         file.writelines("\n\n\n\n\n")
+        file.writelines("The following show the Percent Identities including gaps\n")
         (average_id,min_id,max_id) = calc_identities_with_gaps()
         file.writelines("Average ID is: " + str(average_id) + "%\n")
-        file.writelines("Min Percent ID BETWEEN: " + str(min_id) + "\n")
-        file.writelines("Max Percent ID BETWEEN: " + str(max_id) + "\n")
+        file.writelines("Min Percent ID BETWEEN: " + str(min_id[0]) + " and " + str(min_id[1]) + " With Identity " + str(min_id[2]) + "%" + "\n")
+        file.writelines("Max Percent ID BETWEEN: " + str(max_id[0]) + " and " + str(max_id[1]) + " With Identity " + str(max_id[2]) + "%" + "\n")
     print("Stats are in stats.txt")
     return
 
@@ -227,14 +226,12 @@ def generate_csv():
         for sequence in MAIN:
             file.writelines(sequence.id + ',')
         file.writelines('\n')
-
         #Assumes target is first sequence
         target = MAIN[0].id
         for sequence in MAIN:
             id = calc_pairwise_identity(target,sequence.id)
             file.writelines(str(id) + ',')
         count += 1
-
     msaprocess()
     #Write Entropies
     with open("entropy.csv","w") as file:
